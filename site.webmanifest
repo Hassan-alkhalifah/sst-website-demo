@@ -1,0 +1,16 @@
+{
+  "name": "Simple Solutions Co. for Industry",
+  "short_name": "SST",
+  "description": "Hydraulic & pneumatic hoses, seals, fittings, cylinders, supply chain and 24/7 repair — Dammam, KSA.",
+  "lang": "en",
+  "dir": "auto",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#301070",
+  "icons": [
+    { "src": "assets/img/favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
+    { "src": "assets/img/apple-touch-icon.png", "sizes": "180x180", "type": "image/png" }
+  ]
+}

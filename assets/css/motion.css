@@ -1,0 +1,124 @@
+/* Quiet, mechanical motion: real imagery, gentle depth, no scroll hijacking. */
+:root {
+  --motion-ease: cubic-bezier(.22, 1, .36, 1);
+  --motion-direction: 1;
+  --motion-arrow-rotation: 0deg;
+}
+html[dir="rtl"] { --motion-direction: -1; --motion-arrow-rotation: 180deg; }
+
+/* The opening sequence is finite; it never competes with reading. */
+@media (prefers-reduced-motion: no-preference) {
+  .motion-enabled .showcase__copy > * {
+    animation: sst-arrive 850ms var(--motion-ease) both;
+    animation-delay: var(--arrival-delay, 0ms);
+  }
+  .motion-enabled .showcase__copy > :nth-child(2) { --arrival-delay: 75ms; }
+  .motion-enabled .showcase__copy > :nth-child(3) { --arrival-delay: 155ms; }
+  .motion-enabled .showcase__copy > :nth-child(4) { --arrival-delay: 230ms; }
+  .motion-enabled .showcase__copy > :nth-child(5) { --arrival-delay: 305ms; }
+  .motion-enabled .showcase__visual {
+    animation: sst-frame-arrive 1100ms var(--motion-ease) both;
+  }
+  .motion-reveal {
+    opacity: 0;
+    translate: 0 22px;
+    transition: opacity 800ms var(--motion-ease), translate 800ms var(--motion-ease);
+    transition-delay: var(--reveal-delay, 0ms);
+  }
+  .motion-reveal.is-revealed,
+  .motion-reveal:focus-within { opacity: 1; translate: 0 0; }
+  .expertise-item.reveal { transition-duration: 800ms; transition-timing-function: var(--motion-ease); }
+  .expertise-item.reveal:nth-child(2) { transition-delay: 90ms; }
+  .expertise-item.reveal:nth-child(3) { transition-delay: 180ms; }
+
+  @keyframes sst-arrive {
+    from { opacity: 0; translate: 0 22px; }
+    to { opacity: 1; translate: 0 0; }
+  }
+  @keyframes sst-frame-arrive {
+    from { opacity: .25; clip-path: inset(3% 3% 3% 3% round 12px); }
+    to { opacity: 1; clip-path: inset(0 0 0 0 round 9px); }
+  }
+}
+
+/* Only precise pointing devices receive spatial movement. Touch stays stable. */
+@media (min-width: 900px) and (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .motion-enabled .motion-frame {
+    transform: perspective(1100px) rotateX(var(--depth-rx, 0deg)) rotateY(var(--depth-ry, 0deg));
+    transform-origin: center;
+    isolation: isolate;
+  }
+  .motion-enabled .motion-frame > img {
+    transform: translate3d(var(--depth-x, 0px), calc(var(--depth-y, 0px) + var(--scroll-depth, 0px)), 0) scale(1.12);
+    transition: none;
+  }
+  .motion-frame.is-depth-visible > img { will-change: transform; }
+  .motion-enabled .showcase__visual .image-note {
+    transform: translate3d(calc(var(--depth-x, 0px) * -.6), calc(var(--depth-y, 0px) * -.6), 22px);
+  }
+  .motion-enabled .showcase__visual .image-corner {
+    transform: translate3d(calc(var(--depth-x, 0px) * -.3), calc(var(--depth-y, 0px) * -.3), 10px);
+  }
+  .motion-enabled .showcase__visual::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: radial-gradient(ellipse at var(--light-x, 50%) var(--light-y, 30%), #ffffff25, transparent 65%);
+    opacity: var(--depth-light, 0);
+    transition: opacity 450ms ease;
+    pointer-events: none;
+  }
+}
+
+/* The same response language runs through actions, cards and product imagery. */
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .btn { transition: background 250ms ease, border-color 250ms ease, transform 350ms var(--motion-ease); }
+  .btn:hover { transform: translateY(-3px); }
+  .btn:active { transform: translateY(0); }
+  .btn svg, .text-link svg, .link-arrow svg {
+    transition: transform 400ms var(--motion-ease);
+  }
+  .btn:hover svg, .text-link:hover svg, .link-arrow:hover svg {
+    transform: translateX(calc(5px * var(--motion-direction))) rotate(var(--motion-arrow-rotation));
+  }
+  html[dir="rtl"] .btn:hover svg, html[dir="rtl"] .text-link:hover svg,
+  html[dir="rtl"] .link-arrow:hover svg {
+    transform: translateX(-5px) rotate(180deg);
+  }
+  .expertise-item::after {
+    content: '';
+    position: absolute;
+    inset-block-start: -1px;
+    inset-inline-start: 0;
+    width: 100%;
+    height: 2px;
+    background: #4338ca;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 650ms var(--motion-ease);
+  }
+  html[dir="rtl"] .expertise-item::after { transform-origin: right; }
+  .expertise-item:hover::after, .expertise-item:focus-within::after { transform: scaleX(1); }
+  .expertise-item__top svg { transition: transform 500ms var(--motion-ease); }
+  .expertise-item:hover .expertise-item__top svg { transform: translateY(-3px); }
+  .product-stage__image img, .catalog-image {
+    transition: transform 850ms var(--motion-ease), filter 500ms ease;
+  }
+  .product-stage__image:hover img, .feature-card:hover .catalog-image { transform: scale(1.035); }
+}
+
+@media (max-width: 899px), (hover: none) {
+  .motion-enabled .motion-frame > img { transform: none; transition: none; }
+}
+
+/* A change in the OS preference takes effect immediately, even mid-animation. */
+@media (prefers-reduced-motion: reduce) {
+  .motion-enabled .motion-frame, .motion-enabled .motion-frame > img,
+  .motion-enabled .image-note, .motion-enabled .image-corner {
+    transform: none !important;
+    will-change: auto;
+  }
+  .motion-reveal { opacity: 1; translate: none; }
+  .motion-enabled .showcase__visual { clip-path: none; }
+}

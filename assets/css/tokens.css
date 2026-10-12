@@ -1,0 +1,166 @@
+/* ==========================================================================
+   SST — Simple Solutions Co. for Industry
+   tokens.css — Design tokens (brand, color, type, spacing, elevation)
+   Brand extracted from the live logo: Indigo #301070 + Red #ED1C24 + neutrals.
+   All values are CMS-independent; change them here to re-theme the whole site.
+   ========================================================================== */
+
+:root {
+  /* ---- Brand: Indigo (primary) -------------------------------------------- */
+  --brand-indigo-50:  #f0edf9;
+  --brand-indigo-100: #ddd6f1;
+  --brand-indigo-200: #bdaee4;
+  --brand-indigo-300: #9580d2;
+  --brand-indigo-400: #6f51bf;
+  --brand-indigo-500: #4a2aa5;
+  --brand-indigo-600: #3a1a8a;
+  --brand-indigo-700: #301070; /* measured wordmark color */
+  --brand-indigo-800: #241065;
+  --brand-indigo-900: #190b47;
+  --brand-indigo-950: #110730;
+
+  /* ---- Brand: Red (accent) ------------------------------------------------ */
+  --brand-red-50:  #fdeaeb;
+  --brand-red-100: #fbd0d2;
+  --brand-red-200: #f5a0a4;
+  --brand-red-300: #f06b71;
+  --brand-red-400: #ef3f47;
+  --brand-red-500: #ed1c24; /* exact brand red */
+  --brand-red-600: #cc141b;
+  --brand-red-700: #a81218;
+  --brand-red-800: #841014;
+  --brand-red-900: #5e0a0d;
+
+  /* ---- Neutrals (warm-grey scale from Wix palette) ------------------------ */
+  --white:      #ffffff;
+  --neutral-50:  #f7f8fb;
+  --neutral-100: #eef0f5;
+  --neutral-200: #e2e5ec;
+  --neutral-300: #cdd1da;
+  --neutral-400: #b0b0b0;
+  --neutral-500: #909090;
+  --neutral-600: #606b76;
+  --neutral-700: #404a54;
+  --neutral-800: #283039;
+  --neutral-900: #161b21;
+  --black:       #0c0f13;
+
+  /* ---- Semantic color roles ---------------------------------------------- */
+  --color-primary:        var(--brand-indigo-700);
+  --color-primary-strong: var(--brand-indigo-800);
+  --color-primary-deep:   var(--brand-indigo-950);
+  --color-accent:         var(--brand-red-500);
+  --color-accent-strong:  var(--brand-red-600);
+
+  --color-bg:            var(--white);
+  --color-bg-subtle:     var(--neutral-50);
+  --color-bg-muted:      var(--neutral-100);
+  --color-bg-invert:     var(--brand-indigo-950);
+  --color-surface:       var(--white);
+  --color-surface-2:     var(--neutral-50);
+
+  --color-text:          var(--neutral-900);
+  --color-text-soft:     var(--neutral-700);
+  --color-text-muted:    var(--neutral-600);
+  --color-text-invert:   #eef0f8;
+  --color-text-on-brand: #ffffff;
+
+  --color-border:        var(--neutral-200);
+  --color-border-strong: var(--neutral-300);
+  --color-ring:          color-mix(in srgb, var(--brand-indigo-500) 55%, transparent);
+
+  /* ---- Typography --------------------------------------------------------- */
+  --font-display: "Manrope", "Cairo", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-body:    "Inter", "Cairo", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-arabic:  "Cairo", "Tajawal", system-ui, sans-serif;
+
+  /* Fluid type scale (min .. max via viewport) */
+  --fs-xs:   0.78rem;
+  --fs-sm:   0.875rem;
+  --fs-base: 1rem;
+  --fs-md:   1.0625rem;
+  --fs-lg:   clamp(1.125rem, 1.05rem + 0.4vw, 1.3rem);
+  --fs-xl:   clamp(1.35rem, 1.2rem + 0.8vw, 1.65rem);
+  --fs-2xl:  clamp(1.7rem, 1.45rem + 1.3vw, 2.25rem);
+  --fs-3xl:  clamp(2.1rem, 1.7rem + 2vw, 3rem);
+  --fs-4xl:  clamp(2.6rem, 2rem + 3vw, 4rem);
+
+  --fw-regular: 400;
+  --fw-medium:  500;
+  --fw-semi:    600;
+  --fw-bold:    700;
+  --fw-x:       800;
+
+  --lh-tight:   1.1;
+  --lh-snug:    1.25;
+  --lh-normal:  1.55;
+  --lh-relaxed: 1.7;
+
+  --tracking-tight: -0.02em;
+  --tracking-wide:  0.04em;
+  --tracking-caps:  0.12em;
+
+  /* ---- Spacing scale (4px base) ------------------------------------------ */
+  --space-1:  0.25rem;
+  --space-2:  0.5rem;
+  --space-3:  0.75rem;
+  --space-4:  1rem;
+  --space-5:  1.5rem;
+  --space-6:  2rem;
+  --space-7:  2.5rem;
+  --space-8:  3rem;
+  --space-10: 4rem;
+  --space-12: 5rem;
+  --space-16: 7rem;
+  --space-20: 9rem;
+
+  /* ---- Layout ------------------------------------------------------------- */
+  --container-max: 1200px;
+  --container-wide: 1360px;
+  --gutter: clamp(1rem, 0.5rem + 2.5vw, 2.5rem);
+  --section-y: clamp(3.5rem, 2.5rem + 4vw, 6.5rem);
+  --header-h: 76px;
+
+  /* ---- Radius ------------------------------------------------------------- */
+  --radius-xs: 4px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 18px;
+  --radius-xl: 28px;
+  --radius-pill: 999px;
+
+  /* ---- Elevation (soft, indigo-tinted shadows) --------------------------- */
+  --shadow-xs: 0 1px 2px rgba(25, 11, 71, 0.06);
+  --shadow-sm: 0 2px 8px rgba(25, 11, 71, 0.08);
+  --shadow-md: 0 10px 30px -12px rgba(25, 11, 71, 0.22);
+  --shadow-lg: 0 24px 60px -20px rgba(25, 11, 71, 0.30);
+  --shadow-accent: 0 12px 28px -10px rgba(237, 28, 36, 0.45);
+
+  /* ---- Motion ------------------------------------------------------------- */
+  --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --dur-fast: 140ms;
+  --dur: 240ms;
+  --dur-slow: 420ms;
+
+  /* ---- Z-index ------------------------------------------------------------ */
+  --z-header: 1000;
+  --z-dropdown: 1010;
+  --z-overlay: 1080;
+  --z-modal: 1100;
+  --z-toast: 1200;
+
+  /* ---- Gradients ---------------------------------------------------------- */
+  --grad-brand: linear-gradient(135deg, var(--brand-indigo-800) 0%, var(--brand-indigo-950) 100%);
+  --grad-brand-accent: linear-gradient(120deg, var(--brand-indigo-800) 0%, var(--brand-indigo-700) 55%, var(--brand-red-600) 140%);
+  --grad-sheen: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0));
+}
+
+/* Respect users who prefer reduced motion. */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --dur-fast: 0ms;
+    --dur: 0ms;
+    --dur-slow: 0ms;
+  }
+}

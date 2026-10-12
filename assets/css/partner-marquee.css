@@ -1,0 +1,49 @@
+/* Partner logo marquee. The track always travels right to left, in both languages.
+   partner-marquee.js drives the transform; without it (or with reduced motion)
+   the strip becomes a plain horizontal scroller showing each logo once. */
+.pm{--pm-depth:0;--pm-gap:76px;--pm-scale:1;padding-block:46px 30px;border-top:1px solid #e8e9ed;border-bottom:1px solid #e8e9ed;background:#fff;overflow:hidden}
+.pm-head{display:flex;align-items:end;justify-content:space-between;gap:40px;margin-bottom:22px}
+.pm-head__copy{display:flex;align-items:end;gap:52px;min-width:0}
+.pm-title{margin:0;font-size:clamp(25px,2.3vw,34px);line-height:1.12;letter-spacing:-.045em;font-weight:700;color:#171b2c;flex-shrink:0}
+.pm-lead{margin:0;max-width:390px;font-size:13px;line-height:1.8;color:#717583}
+.pm-head .pm-more{border:0;padding:0;color:#4338ca;flex-shrink:0}
+/* The stage stays LTR in Arabic too, so the loop maths and the travel direction never flip. */
+.pm-stage{position:relative;direction:ltr}
+.pm-viewport{position:relative;overflow:hidden;touch-action:pan-y;padding-block:14px;
+ -webkit-mask-image:linear-gradient(90deg,transparent 0,#000 8%,#000 92%,transparent 100%);mask-image:linear-gradient(90deg,transparent 0,#000 8%,#000 92%,transparent 100%)}
+.pm.is-dragging .pm-viewport{cursor:grabbing}
+.pm-track{display:flex;width:max-content;will-change:transform}
+.pm-set{display:flex;align-items:center;gap:var(--pm-gap);margin:0;padding:0 var(--pm-gap) 0 0;list-style:none}
+/* Logos: each image carries --h, sized so every mark covers a similar area. */
+.pm-logo>a{display:flex;align-items:center;justify-content:center;height:84px;padding-inline:6px;-webkit-user-drag:none}
+.pm-logo img{display:block;width:auto;height:calc(var(--h,46px) * var(--pm-scale));max-width:none;filter:grayscale(1) contrast(1.05);opacity:.55;
+ transition:filter .45s,opacity .45s,transform .5s cubic-bezier(.2,.8,.2,1);-webkit-user-drag:none;user-select:none}
+/* While the strip moves, partner-marquee.js marks the logo under the cursor with .is-hot. */
+.pm:not(.is-live) .pm-logo>a:hover img,.pm-logo>a.is-hot img,.pm-logo>a:focus-visible img{filter:none;opacity:1;transform:scale(1.08)}
+.pm-logo>a:focus-visible{outline-offset:4px;border-radius:4px}
+/* Edge zones: the badge appears on hover and fills as the pointer nears the edge. */
+.pm-edge{position:absolute;top:0;bottom:0;z-index:2;width:min(20%,280px);display:flex;align-items:center;pointer-events:none;opacity:0;transition:opacity .4s}
+.pm-edge::before{content:'';position:absolute;inset:0;opacity:var(--pm-depth);transition:opacity .25s}
+.pm-edge--left{left:0;justify-content:flex-start;padding-left:clamp(14px,2.6vw,44px)}
+.pm-edge--left::before{background:radial-gradient(70% 60% at 0 50%,#4338ca1f,transparent 70%)}
+.pm-edge--right{right:0;justify-content:flex-end;padding-right:clamp(14px,2.6vw,44px)}
+.pm-edge--right::before{background:radial-gradient(70% 60% at 100% 50%,#4338ca1f,transparent 70%)}
+.pm-edge__badge{position:relative;display:grid;place-items:center;width:44px;height:44px;border-radius:50%;background:#ffffffe6;border:1px solid #dcd9f5;color:#4338ca;box-shadow:0 10px 28px #171b2c14;transform:scale(.82);
+ transition:transform .45s cubic-bezier(.2,.8,.2,1),background .3s,color .3s,border-color .3s}
+.pm-edge__badge svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.pm[data-hover] .pm-edge{opacity:.75}
+.pm[data-edge=left] .pm-edge--left,.pm[data-edge=right] .pm-edge--right{opacity:1}
+.pm[data-edge=left] .pm-edge--left .pm-edge__badge,.pm[data-edge=right] .pm-edge--right .pm-edge__badge{transform:scale(calc(.94 + var(--pm-depth) * .16));background:#4338ca;border-color:#4338ca;color:#fff}
+.pm[data-edge] .pm-edge__badge svg{animation:pmNudge .7s cubic-bezier(.4,0,.2,1) infinite}
+.pm:not([data-edge]) .pm-edge::before{opacity:0}
+@keyframes pmNudge{50%{transform:translateX(-3px)}}
+/* Static fallback: no JS or reduced motion. */
+.no-js .pm-viewport,.pm.is-static .pm-viewport{overflow-x:auto;scroll-snap-type:x proximity;scrollbar-width:thin;-webkit-mask-image:none;mask-image:none}
+.no-js .pm-set,.pm.is-static .pm-set{padding-inline:var(--gutter,24px)}
+.pm.is-static .pm-logo{scroll-snap-align:start}
+.pm.is-static .pm-set[aria-hidden],.pm.is-static .pm-edge,.no-js .pm-edge{display:none}
+@media(hover:none){.pm-edge{display:none}}
+@media(max-width:1040px){.pm{--pm-gap:56px}.pm-head__copy{gap:30px}.pm-lead{max-width:320px}}
+@media(max-width:760px){.pm{--pm-gap:40px;--pm-scale:.78;padding-block:34px 18px}.pm-head{display:block;margin-bottom:12px}.pm-head__copy{display:block}.pm-title{font-size:27px}.pm-lead{margin-top:12px;font-size:12px}.pm-head .pm-more{margin-top:16px}.pm-logo>a{height:70px}
+ .pm-viewport{-webkit-mask-image:linear-gradient(90deg,transparent 0,#000 6%,#000 94%,transparent 100%);mask-image:linear-gradient(90deg,transparent 0,#000 6%,#000 94%,transparent 100%)}}
+html[dir=rtl] .pm-title{letter-spacing:-.01em;line-height:1.4}

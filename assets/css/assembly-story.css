@@ -1,0 +1,107 @@
+/* A scroll-directed hydraulic assembly. The model is real WebGL geometry.
+   .assembly-frame is the rectangle the 3D camera composes into: a centred,
+   full-width band between the heading and the story copy. The camera reads
+   that element, so copy and model can never overlap at any size or language. */
+.assembly-story{--story-header:120px;--story-accent:#ff7047;--story-pad:56px;--story-glow:64%;position:relative;background:#0d1420;color:#f7f8fc;scroll-margin-top:0}
+html[dir=rtl] .assembly-story{--story-glow:36%}
+.assembly-story.is-ready:not(.is-static){height:350svh}
+.assembly-stage{position:relative;isolation:isolate;height:calc(100svh - var(--story-header));min-height:560px;max-height:1100px;overflow:hidden;background:radial-gradient(ellipse 74% 90% at var(--story-glow) 46%,#1e2c42 0,#121b2b 48%,#0b1220 100%)}
+.is-ready:not(.is-static) .assembly-stage{position:sticky;top:var(--story-header)}
+.assembly-content{position:relative;z-index:2;height:100%;max-width:1536px;margin:auto;padding:42px var(--story-pad) 26px;pointer-events:none;
+ display:grid;column-gap:48px;grid-template-columns:minmax(0,460px) minmax(0,1fr);grid-template-rows:auto minmax(0,1fr) auto;
+ grid-template-areas:"head tools" "model model" "copy rail"}
+.assembly-top{grid-area:head}
+.assembly-heading{max-width:620px;margin:0;font-size:clamp(34px,3.7vw,60px);line-height:1.05;letter-spacing:-.052em;font-weight:700;color:#fff}
+.assembly-intro{font-size:14px;line-height:1.6;margin-top:13px;color:#b6bfce;max-width:470px}
+.assembly-tools{grid-area:tools;justify-self:end;align-self:start;display:flex;align-items:center;gap:10px;pointer-events:auto}
+.assembly-toggle{width:42px;height:42px;display:grid;place-items:center;border:1px solid #768194;background:#111a28aa;color:#fff;border-radius:4px;pointer-events:auto;transition:background .2s}
+.assembly-toggle:hover{background:#334155}
+.assembly-toggle svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.7}
+.assembly-cutaway{height:42px;padding:0 14px;display:flex;align-items:center;gap:9px;font:inherit;font-size:11px;font-weight:500;color:#d9e0eb;background:#111a28aa;border:1px solid #657186;border-radius:4px;transition:background .2s,border-color .2s}
+.assembly-cutaway svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.2}
+.assembly-cutaway:hover{background:#334155}
+.assembly-cutaway[aria-pressed=true]{background:#26354b;border-color:#a3b0c5;color:#fff}
+.assembly-story:not(.is-ready) .assembly-tools{display:none}
+.assembly-toggle [data-play-icon]{display:none}
+.assembly-toggle[aria-pressed=true] [data-pause-icon]{display:none}
+.assembly-toggle[aria-pressed=true] [data-play-icon]{display:block}
+.assembly-viewport{position:absolute;inset:0;z-index:1;direction:ltr}
+.assembly-canvas{display:block;width:100%;height:100%;opacity:0;transition:opacity .65s}
+.is-ready .assembly-canvas{opacity:1}
+/* The rectangle the camera composes into; the WebGL fallback image uses it too. */
+.assembly-frame{grid-area:model;position:relative;min-height:180px;margin-block:14px 10px}
+.assembly-fallback{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:8px;box-shadow:0 30px 70px #00000073;opacity:.95;transition:opacity .4s}
+.is-ready .assembly-fallback{opacity:0;visibility:hidden}
+.assembly-bottom{grid-area:copy;align-self:end}
+.assembly-narrative{min-height:104px;margin-bottom:14px}
+.assembly-count{display:block;color:var(--story-accent);font-size:12px;font-weight:600;letter-spacing:.035em;margin-bottom:9px;direction:ltr}
+.assembly-caption h3{font-size:clamp(20px,1.9vw,28px);line-height:1.25;letter-spacing:-.035em;color:#fff;margin:0 0 9px;font-weight:600}
+.assembly-caption p{color:#b6bfce;font-size:13px;line-height:1.65;margin:0;max-width:420px}
+.assembly-caption:not([hidden]){animation:assembly-copy-in .4s both}
+.assembly-bottom-line{display:flex;justify-content:space-between;align-items:center;gap:20px;color:#7f8ca1;font-size:10px}
+.assembly-explore{display:inline-flex;align-items:center;gap:9px;color:#e1e5ee;font-size:11px;pointer-events:auto;text-decoration:none;padding-block:3px}
+.assembly-explore svg{width:15px;height:15px;fill:none;stroke:currentColor;transition:transform .2s}
+.assembly-explore:hover{color:var(--story-accent)}
+.assembly-explore:hover svg{transform:translateY(3px)}
+.assembly-rail{grid-area:rail;align-self:end}
+.assembly-note{display:block;text-align:end;color:#6f7c91;font-size:10px;margin-bottom:9px}
+.assembly-steps{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;pointer-events:auto}
+.assembly-step{position:relative;text-align:start;color:#99a5b9;border:0;background:none;border-top:2px solid #465267;padding:15px 0 5px;min-height:46px;font:inherit;font-size:12px;transition:color .2s}
+.assembly-step::before{content:"";position:absolute;top:-2px;inset-inline-start:0;height:2px;width:100%;background:var(--story-accent);transform:scaleX(0);transform-origin:left;transition:transform .35s}
+.assembly-step[aria-current=step]{color:#fff}
+.assembly-step[aria-current=step]::before,.assembly-step.is-complete::before{transform:scaleX(1)}
+.assembly-step:hover{color:white}
+.assembly-step>span:first-child{display:inline-block;margin-inline-end:10px;font-size:10px;color:#8592a8;font-variant-numeric:tabular-nums}
+.assembly-step[aria-current=step]>span:first-child{color:var(--story-accent)}
+.assembly-story.is-static .assembly-toggle,.assembly-story:not(.is-ready) .assembly-toggle{display:none}
+.assembly-story.is-static .assembly-stage{height:760px;max-height:none}
+.assembly-story:not(.is-ready) .assembly-viewport{pointer-events:none}
+html[dir=rtl] .assembly-heading{letter-spacing:-.02em;font-size:clamp(30px,2.8vw,48px);line-height:1.35}
+html[dir=rtl] .assembly-step::before{transform-origin:right}
+html[dir=rtl] .assembly-count{text-align:right}
+html[dir=rtl] .assembly-caption h3{letter-spacing:0;line-height:1.4}
+@keyframes assembly-copy-in{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:none}}
+@media(min-width:1800px){
+ .assembly-story{--story-pad:max(56px,calc((100vw - 1424px)/2))}
+ .assembly-content{max-width:none}
+}
+/* A taller stage can afford more room between the copy and the model. */
+@media(min-width:1041px) and (min-height:1000px){
+ .assembly-frame{margin-block:24px 20px}
+ .assembly-narrative{min-height:118px}
+}
+@media(max-width:1040px){
+ .assembly-story{--story-header:80px;--story-pad:32px}
+ .assembly-content{padding:34px var(--story-pad) 24px;column-gap:0;grid-template-columns:minmax(0,1fr);
+  grid-template-rows:auto auto minmax(0,1fr) auto auto;grid-template-areas:"head" "tools" "model" "copy" "rail"}
+ .assembly-rail{margin-top:14px}
+ .assembly-heading{font-size:42px;max-width:520px}
+ .assembly-tools{justify-self:start;margin-top:14px}
+ .assembly-bottom{max-width:none}
+ .assembly-frame{min-height:220px;margin-block:14px 10px}
+ .assembly-narrative{max-width:560px;min-height:104px;margin-bottom:14px}
+ .assembly-caption h3{font-size:24px}.assembly-intro{font-size:13px;max-width:460px}
+ .assembly-rail{margin-top:14px}
+}
+@media(max-width:760px){
+ .assembly-story{--story-header:76px;--story-pad:24px}.assembly-story.is-ready:not(.is-static){height:320svh}
+ .assembly-content{padding:30px var(--story-pad) 23px}.assembly-stage{min-height:620px;max-height:950px}
+ .assembly-heading{font-size:36px;max-width:310px;line-height:1.08}
+ .assembly-intro{font-size:12px;max-width:265px;margin-top:12px}
+ .assembly-toggle{width:32px;height:32px}.assembly-toggle svg{width:14px;height:14px}
+ .assembly-tools{margin-top:12px;gap:8px}
+ .assembly-cutaway{height:32px;font-size:10px;padding-inline:10px}.assembly-cutaway svg{width:15px;height:15px}
+ .assembly-frame{min-height:180px;margin-block:8px 6px}
+ .assembly-narrative{min-height:118px;margin-bottom:8px}
+ .assembly-count{font-size:10px;margin-bottom:7px}.assembly-caption h3{font-size:22px;max-width:300px}.assembly-caption p{font-size:12px;max-width:350px}
+ .assembly-bottom-line{font-size:8px}.assembly-explore{font-size:9px;gap:5px}
+ .assembly-note{font-size:8px;margin-bottom:4px}
+ .assembly-rail{margin-top:12px}
+ .assembly-steps{gap:11px}.assembly-step{font-size:10px;padding-top:12px;min-height:52px}
+ .assembly-step>span:first-child{display:block;font-size:9px;margin-bottom:4px}
+ .assembly-story.is-static .assembly-stage{height:760px}
+ html[dir=rtl] .assembly-heading{font-size:32px;line-height:1.4;max-width:300px}
+ html[dir=rtl] .assembly-caption h3{font-size:21px}
+}
+@media(max-width:380px){.assembly-story{--story-pad:20px}.assembly-heading{font-size:32px}.assembly-caption h3{font-size:20px}.assembly-caption p{font-size:11px}.assembly-step{font-size:9px}}
+@media(prefers-reduced-motion:reduce){.assembly-story.is-ready{height:auto}.assembly-stage{position:relative!important;top:auto!important}.assembly-canvas,.assembly-caption,.assembly-step::before{transition:none;animation:none}}
